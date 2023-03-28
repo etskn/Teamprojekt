@@ -1,0 +1,12 @@
+@import url('./main-layout.css');
+@import url('./views/personen-liste-view.css');
+@import url('./views/verwalten-view.css');
+    [theme~="dark"] {
+      --lumo-primary-color-50pct: hsla(171, 100%, 29%, 0.5);
+      --lumo-primary-color-10pct: hsla(171, 100%, 29%, 0.1);
+      --lumo-primary-color: hsl(171, 100%, 29%);
+      --lumo-primary-text-color: hsl(165, 100%, 50%);
+      --lumo-base-color: hsl(165, 51%, 11%);
+      --lumo-body-text-color: hsla(214, 0%, 71%, 0.9);
+
+    }
