@@ -7,8 +7,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.checkbox.CheckboxGroup;
-import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.Grid;
@@ -26,28 +24,26 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.security.PermitAll;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 
-@PageTitle("Personen Liste")
-@Route(value = "Personen-Liste", layout = MainLayout.class)
-@PermitAll
+import java.util.ArrayList;
+import java.util.List;
+
+@PageTitle("Personen Liste Planer")
+@Route(value = "Personen-Liste-Planer", layout = MainLayout.class)
+@RolesAllowed("ADMIN")
 @Uses(Icon.class)
-public class PersonenListeView extends Div {
+public class PersonenListeViewPlaner extends Div {
 
     private Grid<SamplePerson> grid;
 
     private Filters filters;
     private final SamplePersonService samplePersonService;
 
-    public PersonenListeView(SamplePersonService SamplePersonService) {
+    public PersonenListeViewPlaner(SamplePersonService SamplePersonService) {
         this.samplePersonService = SamplePersonService;
         setSizeFull();
         addClassNames("personen-liste-view");
@@ -87,8 +83,13 @@ public class PersonenListeView extends Div {
     public static class Filters extends Div implements Specification<SamplePerson> {
 
         private final TextField name = new TextField("Name");
+        private final TextField phone = new TextField("Telefon");
         private final DatePicker startDate = new DatePicker("Geburtsdatum");
         private final DatePicker endDate = new DatePicker();
+
+        private final TextField gender = new TextField("Geschlecht");
+
+        private final TextField user_location = new TextField("Standort");
 
         //Needed
 
@@ -105,6 +106,7 @@ public class PersonenListeView extends Div {
             resetBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             resetBtn.addClickListener(e -> {
                 name.clear();
+                phone.clear();
                 startDate.clear();
                 endDate.clear();
                 onSearch.run();
@@ -117,7 +119,7 @@ public class PersonenListeView extends Div {
             actions.addClassName(LumoUtility.Gap.SMALL);
             actions.addClassName("actions");
 
-            add(name, createDateRangeFilter(), actions);
+            add(name, phone, createDateRangeFilter(), actions);
         }
 
         private Component createDateRangeFilter() {
@@ -154,7 +156,17 @@ public class PersonenListeView extends Div {
                         lowerCaseFilter + "%");
                 predicates.add(criteriaBuilder.or(firstNameMatch, lastNameMatch));
             }
+            if (!phone.isEmpty()) {
+                String databaseColumn = "phone";
+                String ignore = "- ()";
 
+                String lowerCaseFilter = ignoreCharacters(ignore, phone.getValue().toLowerCase());
+                Predicate phoneMatch = criteriaBuilder.like(
+                        ignoreCharacters(ignore, criteriaBuilder, criteriaBuilder.lower(root.get(databaseColumn))),
+                        "%" + lowerCaseFilter + "%");
+                predicates.add(phoneMatch);
+
+            }
             if (startDate.getValue() != null) {
                 String databaseColumn = "dateOfBirth";
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(databaseColumn),
@@ -165,6 +177,9 @@ public class PersonenListeView extends Div {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(criteriaBuilder.literal(endDate.getValue()),
                         root.get(databaseColumn)));
             }
+
+
+
 
             return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
         }
@@ -194,7 +209,10 @@ public class PersonenListeView extends Div {
         grid.addColumn("firstName").setAutoWidth(true);
         grid.addColumn("lastName").setAutoWidth(true);
         grid.addColumn("email").setAutoWidth(true);
+        grid.addColumn("phone").setAutoWidth(true);
         grid.addColumn("dateOfBirth").setAutoWidth(true);
+        grid.addColumn("gender").setAutoWidth(true);
+        grid.addColumn("user_location").setAutoWidth(true);
 
         grid.setItems(query -> samplePersonService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)),

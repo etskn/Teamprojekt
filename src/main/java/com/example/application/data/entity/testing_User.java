@@ -13,14 +13,13 @@ import jakarta.persistence.Table;
 import java.util.Set;
 
 @Entity
-@Table(name = "application_user")
-
-public class User extends AbstractEntity {
+@Table(name = "testing_user")
+public class testing_User extends AbstractEntity {
 
     private String username;
     private String name;
-    @JsonIgnore
-    private String hashedPassword;
+
+    private String password;
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -40,11 +39,12 @@ public class User extends AbstractEntity {
     public void setName(String name) {
         this.name = name;
     }
-    public String getHashedPassword() {
-        return hashedPassword;
+
+    public String getPassword() {
+        return password;
     }
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
     public Set<Role> getRoles() {
         return roles;
