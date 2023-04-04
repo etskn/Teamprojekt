@@ -13,9 +13,17 @@ public class SamplePerson extends AbstractEntity {
     private String email;
     private String phone;
     private LocalDate dateOfBirth;
-    private String occupation;
-    private String role;
-    private String gender;
+
+    private Gender gender;
+
+    //Gender und Location wird noch nicht genutzt muss eingebunden werden mit der Grid in PersonenListe
+    private enum Gender {
+        Männlich,
+        Weiblich,
+        Divers
+    };
+    private String user_location;
+
     private boolean important;
 
     public String getFirstName() {
@@ -29,12 +37,16 @@ public class SamplePerson extends AbstractEntity {
     }
 
     //TESTING GENDER IN SQL
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
+
+    // Gender und Location wird noch nicht genutzt muss eingebunden werden mit der Grid in PersonenListe
+    public String getUser_location() {return user_location;}
+    public void setUser_location(String user_location) {this.user_location = user_location;}
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
@@ -57,18 +69,7 @@ public class SamplePerson extends AbstractEntity {
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
-    public String getOccupation() {
-        return occupation;
-    }
-    public void setOccupation(String occupation) {
-        this.occupation = occupation;
-    }
-    public String getRole() {
-        return role;
-    }
-    public void setRole(String role) {
-        this.role = role;
-    }
+
     public boolean isImportant() {
         return important;
     }

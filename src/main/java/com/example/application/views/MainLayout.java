@@ -3,11 +3,13 @@ package com.example.application.views;
 import com.example.application.components.appnav.AppNav;
 import com.example.application.components.appnav.AppNavItem;
 import com.example.application.data.entity.User;
+import com.example.application.data.entity.testing_User;
 import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.empty.EmptyView;
 import com.example.application.views.homepage.HomepageView;
 import com.example.application.views.kontakt.KontaktView;
 import com.example.application.views.personenliste.PersonenListeView;
+import com.example.application.views.personenliste.PersonenListeViewPlaner;
 import com.example.application.views.verwalten.VerwaltenView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -93,6 +95,11 @@ public class MainLayout extends AppLayout {
         }
         if (accessChecker.hasAccess(KontaktView.class)) {
             nav.addItem(new AppNavItem("Kontakt", KontaktView.class, LineAwesomeIcon.INFO_SOLID.create()));
+
+        }
+
+        if (accessChecker.hasAccess(PersonenListeViewPlaner.class)) {
+            nav.addItem(new AppNavItem("Personen Liste View Planer", PersonenListeViewPlaner.class, LineAwesomeIcon.DEV.create()));
 
         }
 
