@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 @Theme(value = "myapp", variant = Lumo.DARK)
 public class Application implements AppShellConfigurator {
-
+//TEST
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
